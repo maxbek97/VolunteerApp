@@ -10,6 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun SegmentedSwitch(
@@ -25,7 +26,7 @@ fun SegmentedSwitch(
     Row(
         modifier = Modifier
             .fillMaxWidth(0.8f)
-            .background(bg, RoundedCornerShape(50))
+            .background(color = Color(0xFF111845), RoundedCornerShape(50))
             .padding(4.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -42,7 +43,7 @@ fun SegmentedSwitch(
                 .clickable { onSelect(true) },
             contentAlignment = Alignment.Center
         ) {
-            Text(option1, color = textColor)
+            Text(option1, color = textColor, fontSize = 12.sp)
         }
 
         Box(
@@ -50,13 +51,13 @@ fun SegmentedSwitch(
                 .weight(1f)
                 .background(
                     if (!selectedFirst) selectedColor else Color.Transparent,
-                    RoundedCornerShape(50)
+                    RoundedCornerShape(40)
                 )
                 .padding(vertical = 10.dp)
                 .clickable { onSelect(false) },
             contentAlignment = Alignment.Center
         ) {
-            Text(option2, color = textColor)
+            Text(option2, color = textColor, fontSize = 12.sp)
         }
     }
 }

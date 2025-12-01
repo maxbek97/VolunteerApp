@@ -19,6 +19,7 @@ import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import com.example.volunteerapp.R
 
+
 @Composable
 fun AuthScreen() {
 
@@ -36,7 +37,7 @@ fun AuthScreen() {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFF121212))
+            .background(Color(0xFF111845))
     ) {
 
         Column(
@@ -69,7 +70,7 @@ fun AuthScreen() {
                     .fillMaxWidth(0.9f)
                     .animateContentSize(),
                 shape = RoundedCornerShape(20.dp),
-                color = Color(0xFF1E1E1E),
+                color = Color.White,
                 tonalElevation = 6.dp,
                 shadowElevation = 12.dp
             ) {
@@ -81,7 +82,8 @@ fun AuthScreen() {
                     // ---------- ЗАГОЛОВОК ----------
                     Text(
                         text = if (isLogin) "Авторизация" else "Регистрация",
-                        color = Color.White,
+                        color = Color(0xFF2139d1
+                    ),
                         fontSize = 28.sp,
                         fontWeight = FontWeight.Bold
                     )
@@ -172,11 +174,12 @@ fun AuthScreen() {
 
 
                                 SegmentedSwitch(
-                                    option1 = "Волонтёр",
-                                    option2 = "Организатор",
-                                    selectedFirst = isVolunteer,
-                                    onSelect = { isVolunteer = it }
+                                    option1 = "Организатор",
+                                    option2 = "Волонтёр",
+                                    selectedFirst = !isVolunteer,
+                                    onSelect = { isVolunteer = !it }
                                 )
+
                             }
                         }
                     }
