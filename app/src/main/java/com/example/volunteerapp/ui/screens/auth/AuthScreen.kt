@@ -15,14 +15,9 @@ import com.example.volunteerapp.ui.components.SegmentedSwitch
 import com.example.volunteerapp.ui.components.AuthField
 import androidx.compose.foundation.Image
 import androidx.compose.ui.res.painterResource
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.togetherWith
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import com.example.volunteerapp.R
-
-
 
 @Composable
 fun AuthScreen() {
@@ -52,29 +47,32 @@ fun AuthScreen() {
             verticalArrangement = Arrangement.Top
         ) {
 
-            // ---------- ЛОГО ВВЕРХУ ----------
-            Image(
-                painter = painterResource(R.drawable.logo),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(140.dp)
-                    .align(Alignment.CenterHorizontally)
-            )
-
-            Spacer(Modifier.height(24.dp))
+            // ---------- АНИМАЦИЯ ПОКАЗА/СКРЫТИЯ ЛОГОТИПА ----------
+            AnimatedVisibility(
+                visible = isLogin,
+                enter = fadeIn(tween(300)) + slideInVertically { -80 },
+                exit = fadeOut(tween(300)) + slideOutVertically { -80 }
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.logo),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(140.dp)
+                        .padding(bottom = 20.dp)
+                )
+            }
 
             // ---------- КАРТОЧКА ----------
             Surface(
                 modifier = Modifier
                     .wrapContentHeight()
                     .fillMaxWidth(0.9f)
-                    .animateContentSize(),  // <-- вот эта строка
+                    .animateContentSize(),
                 shape = RoundedCornerShape(20.dp),
                 color = Color(0xFF1E1E1E),
                 tonalElevation = 6.dp,
                 shadowElevation = 12.dp
-            )
- {
+            ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     modifier = Modifier.padding(20.dp)
@@ -90,7 +88,6 @@ fun AuthScreen() {
 
                     Spacer(Modifier.height(20.dp))
 
-                    // ---------- РЫЧАГ LOGIN/REGISTER ----------
                     SegmentedSwitch(
                         option1 = "Войти",
                         option2 = "Регистрация",
@@ -100,41 +97,92 @@ fun AuthScreen() {
 
                     Spacer(Modifier.height(20.dp))
 
+                    // ---------- АНИМАЦИЯ МЕЖДУ ФОРМАМИ ----------
                     // ---------- АНИМАЦИЯ СМЕНЫ ФОРМ ----------
-
                     AnimatedContent(
                         targetState = isLogin,
                         label = "auth_animation",
                         transitionSpec = {
                             fadeIn() togetherWith fadeOut()
                         },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .animateContentSize()
                     ) { loginMode ->
+
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(12.dp),   // ← ← ← ВАЖНО
                             modifier = Modifier.fillMaxWidth()
                         ) {
+
                             if (loginMode) {
-                                AuthField(label = "Логин", value = login, onValueChange = { login = it }, required = true)
-                                Spacer(Modifier.height(12.dp))
-                                AuthField(label = "Пароль", value = password, onValueChange = { password = it }, required = true)
+                                AuthField(
+                                    label = "Логин",
+                                    value = login,
+                                    onValueChange = { login = it },
+                                    required = true
+                                )
+
+                                AuthField(
+                                    label = "Пароль",
+                                    value = password,
+                                    onValueChange = { password = it },
+                                    required = true
+                                )
+
                             } else {
-                                AuthField(label = "Имя", value = firstName, onValueChange = { firstName = it }, required = true)
-                                Spacer(Modifier.height(12.dp))
-                                AuthField(label = "Фамилия", value = lastName, onValueChange = { lastName = it }, required = true)
-                                Spacer(Modifier.height(12.dp))
-                                AuthField(label = "Отчество", value = middleName, onValueChange = { middleName = it }, required = false)
-                                Spacer(Modifier.height(16.dp))
-                                Text("Роль", color = Color.White)
-                                Spacer(Modifier.height(10.dp))
-                                SegmentedSwitch(option1 = "Волонтёр", option2 = "Организатор", selectedFirst = isVolunteer, onSelect = { isVolunteer = it })
+
+                                AuthField(
+                                    label = "Имя",
+                                    value = firstName,
+                                    onValueChange = { firstName = it },
+                                    required = true
+                                )
+
+                                AuthField(
+                                    label = "Фамилия",
+                                    value = lastName,
+                                    onValueChange = { lastName = it },
+                                    required = true
+                                )
+
+                                AuthField(
+                                    label = "Отчество",
+                                    value = middleName,
+                                    onValueChange = { middleName = it },
+                                    required = false
+                                )
+
+                                AuthField(
+                                    label = "Логин",
+                                    value = login,
+                                    onValueChange = { login = it },
+                                    required = true
+                                )
+
+                                AuthField(
+                                    label = "Пароль",
+                                    value = password,
+                                    onValueChange = { password = it },
+                                    required = true
+                                )
+
+                                Spacer(Modifier.height(8.dp))
+
+
+                                SegmentedSwitch(
+                                    option1 = "Волонтёр",
+                                    option2 = "Организатор",
+                                    selectedFirst = isVolunteer,
+                                    onSelect = { isVolunteer = it }
+                                )
                             }
                         }
                     }
 
                 }
             }
-
             Spacer(Modifier.height(26.dp))
 
             Button(
@@ -150,5 +198,3 @@ fun AuthScreen() {
         }
     }
 }
-
-
