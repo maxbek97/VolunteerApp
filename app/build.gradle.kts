@@ -18,6 +18,8 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "BASE_URL", "\"http://82.97.241.226:8080/\"")
+
     }
 
     buildTypes {
@@ -38,6 +40,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true // ЭТА СТРОКА ДОЛЖНА БЫТЬ ЯВНО ВЫСТАВЛЕНА В true
     }
 }
 
@@ -54,8 +57,12 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation("androidx.compose.animation:animation")
     implementation("androidx.compose.animation:animation-graphics")
-
-
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.0")
+    implementation("androidx.compose.runtime:runtime-livedata:1.6.8")
+    implementation("org.jetbrains.kotlinx", "kotlinx-coroutines-core", "1.5.2")
 
 
     testImplementation(libs.junit)

@@ -18,10 +18,36 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
 import com.example.volunteerapp.R
-
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModel
+import com.example.volunteerapp.data.remote.AuthRepository
+import com.example.volunteerapp.data.remote.RetrofitClient
+import androidx.compose.runtime.collectAsState
 
 @Composable
 fun AuthScreen() {
+
+    // 1. **ПОДГОТОВКА ViewModel**
+
+    // **Создаем необходимые зависимости (Репозиторий)**
+    val repository = remember { AuthRepository(RetrofitClient.apiService) }
+
+    // **Создаем ViewModel, используя фабрику для передачи repository**
+    val viewModel: AuthViewModel = viewModel(
+        factory = object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                if (modelClass.isAssignableFrom(AuthViewModel::class.java)) {
+                    @Suppress("UNCHECKED_CAST")
+                    return AuthViewModel(repository) as T
+                }
+                throw IllegalArgumentException("Unknown ViewModel class")
+            }
+        }
+    )
+
+    // **Собираем состояние из ViewModel (AuthState)**
+    val authState by viewModel.uiState.collectAsState()
 
     var isLogin by remember { mutableStateOf(true) }
 
@@ -189,14 +215,45 @@ fun AuthScreen() {
             Spacer(Modifier.height(26.dp))
 
             Button(
-                onClick = { /* TODO */ },
+                onClick = {
+                    if (isLogin) {
+                        viewModel.login(login, password)
+                    } else {
+                        val role = if (isVolunteer) "volunteer" else "organizer"
+                        viewModel.register(login, password, role, firstName, lastName, middleName)
+                    }
+                },
+                enabled = authState != AuthUiState.Loading,
                 modifier = Modifier.fillMaxWidth(0.7f),
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3F51B5))
             ) {
-                Text(
-                    text = if (isLogin) "Войти" else "Зарегистрироваться",
-                    fontSize = 18.sp
-                )
+                if (authState == AuthUiState.Loading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        strokeWidth = 3.dp,
+                        color = Color.White
+                    )
+                } else {
+                    Text(
+                        text = if (isLogin) "Войти" else "Зарегистрироваться",
+                        fontSize = 18.sp
+                    )
+                }
+            }
+            // 3. **ОБРАБОТКА СОСТОЯНИЯ UI (ОШИБКИ/УСПЕХ)**
+            when (val state = authState) {
+                is AuthUiState.Error -> {
+                    Text("Ошибка: ${state.message}", color = Color.Red, modifier = Modifier.padding(top = 8.dp))
+                }
+                is AuthUiState.LoginSuccess -> {
+                    Text("Успешный вход! Роль: ${state.userRole}", color = Color.Green, modifier = Modifier.padding(top = 8.dp))
+                    // TODO: Здесь должна быть навигация на главный экран
+                }
+                is AuthUiState.RegistrationSuccess -> {
+                    Text("Регистрация успешна! Теперь войдите.", color = Color.Green, modifier = Modifier.padding(top = 8.dp))
+                    // TODO: Возможно, переключить isLogin = true
+                }
+                else -> Unit // AuthUiState.Idle или AuthUiState.Loading (уже показано в кнопке)
             }
         }
     }
