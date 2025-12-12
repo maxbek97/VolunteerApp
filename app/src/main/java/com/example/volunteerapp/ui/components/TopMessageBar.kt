@@ -21,7 +21,6 @@ fun TopMessageBar(
     isError: Boolean,
     onDismiss: () -> Unit
 ) {
-    // Время показа: 1.5 секунды
     LaunchedEffect(message) {
         if (message.isNotEmpty()) {
             delay(1500)

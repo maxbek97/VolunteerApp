@@ -12,7 +12,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.volunteerapp.ui.components.*
-
+import com.example.volunteerapp.ui.MainNavGraph
 import androidx.compose.foundation.Image
 import androidx.compose.ui.res.painterResource
 import androidx.compose.animation.*
@@ -26,10 +26,13 @@ import com.example.volunteerapp.data.remote.RetrofitClient
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavOptionsBuilder
 
 
 @Composable
-fun AuthScreen() {
+fun AuthScreen(navController: NavHostController) {
 
     // 1. **ПОДГОТОВКА ViewModel**
 
@@ -285,11 +288,17 @@ fun AuthScreen() {
                 is AuthUiState.LoginSuccess -> {
                     topMessage = "С возвращением!"
                     isError = false
+
+                    when (state.userRole) {
+                        "volunteer" -> navController.navigate("volunteer_home") {
+                            popUpTo("auth") { inclusive = true }
+                        }
+                        "organizer" -> { /* позже */ }
+                    }
                 }
                 is AuthUiState.RegistrationSuccess -> {
                     topMessage = "Регистрация прошла успешно"
                     isError = false
-                    // TODO: Возможно, переключить isLogin = true
                 }
                 else -> Unit // AuthUiState.Idle или AuthUiState.Loading (уже показано в кнопке)
             }

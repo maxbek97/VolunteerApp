@@ -13,6 +13,8 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 
 @Composable
 fun AuthField(
@@ -25,13 +27,15 @@ fun AuthField(
     nextFocusRequester: FocusRequester? = null,
     isLast: Boolean = false
 ) {
+    val keyboardController = LocalSoftwareKeyboardController.current
+    val focusManager = LocalFocusManager.current
 
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         label = {
             Row {
-                Text(label, color = Color.Black)   // ← ЧЁРНЫЙ ЛЕЙБЛ
+                Text(label, color = Color.Black)
                 if (required) Text("*", color = Color.Red)
             }
         },
@@ -45,9 +49,9 @@ fun AuthField(
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = Color.White,
             unfocusedBorderColor = Color.Gray,
-            focusedLabelColor = Color.Black,      // ← ЧЁРНЫЙ ПРИ ФОКУСЕ
+            focusedLabelColor = Color.Black,
             unfocusedLabelColor = Color.Black,
-            cursorColor = Color.Black           // ← Белый черный
+            cursorColor = Color.Black
         ),
         keyboardOptions = KeyboardOptions(
             imeAction = if (isLast) ImeAction.Done else ImeAction.Next
@@ -56,7 +60,11 @@ fun AuthField(
             onNext = {
                 nextFocusRequester?.requestFocus()
             },
-            onDone = { }
+            onDone = {
+                focusManager.clearFocus()      // 🔥 снимаем фокус
+                keyboardController?.hide()     // 🔥 скрываем клавиатуру
+            }
         )
     )
 }
+
