@@ -2,39 +2,61 @@ package com.example.volunteerapp.ui.components
 
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-
+import androidx.compose.ui.text.input.ImeAction
 
 @Composable
 fun AuthField(
     label: String,
     value: String,
     onValueChange: (String) -> Unit,
-    required: Boolean
+    required: Boolean,
+    modifier: Modifier = Modifier,
+    focusRequester: FocusRequester? = null,
+    nextFocusRequester: FocusRequester? = null,
+    isLast: Boolean = false
 ) {
+
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         label = {
             Row {
-                Text(label)
+                Text(label, color = Color.Black)   // ← ЧЁРНЫЙ ЛЕЙБЛ
                 if (required) Text("*", color = Color.Red)
             }
         },
         singleLine = true,
-        modifier = Modifier.fillMaxWidth(0.85f),
+        modifier = modifier
+            .fillMaxWidth(0.85f)
+            .let { mod ->
+                if (focusRequester != null) mod.focusRequester(focusRequester)
+                else mod
+            },
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = Color.White,
             unfocusedBorderColor = Color.Gray,
-            focusedLabelColor = Color.White,
-            unfocusedLabelColor = Color.Gray,
-            cursorColor = Color.White
+            focusedLabelColor = Color.Black,      // ← ЧЁРНЫЙ ПРИ ФОКУСЕ
+            unfocusedLabelColor = Color.Black,
+            cursorColor = Color.Black           // ← Белый черный
+        ),
+        keyboardOptions = KeyboardOptions(
+            imeAction = if (isLast) ImeAction.Done else ImeAction.Next
+        ),
+        keyboardActions = KeyboardActions(
+            onNext = {
+                nextFocusRequester?.requestFocus()
+            },
+            onDone = { }
         )
-
     )
 }

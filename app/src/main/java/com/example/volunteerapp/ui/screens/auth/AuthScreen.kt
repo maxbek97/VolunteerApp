@@ -11,8 +11,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.volunteerapp.ui.components.SegmentedSwitch
-import com.example.volunteerapp.ui.components.AuthField
+import com.example.volunteerapp.ui.components.*
+
 import androidx.compose.foundation.Image
 import androidx.compose.ui.res.painterResource
 import androidx.compose.animation.*
@@ -24,6 +24,9 @@ import androidx.lifecycle.ViewModel
 import com.example.volunteerapp.data.remote.AuthRepository
 import com.example.volunteerapp.data.remote.RetrofitClient
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+
 
 @Composable
 fun AuthScreen() {
@@ -46,6 +49,11 @@ fun AuthScreen() {
         }
     )
 
+    val uiState by viewModel.uiState.collectAsState()
+
+    var topMessage by remember { mutableStateOf("") }
+    var isError by remember { mutableStateOf(false) }
+
     // **Собираем состояние из ViewModel (AuthState)**
     val authState by viewModel.uiState.collectAsState()
 
@@ -60,12 +68,25 @@ fun AuthScreen() {
 
     var isVolunteer by remember { mutableStateOf(true) }
 
+    val loginFocus = remember { FocusRequester() }
+    val passwordFocus = remember { FocusRequester() }
+    val lastnameFocus = remember { FocusRequester() }
+    val firstnameFocus = remember { FocusRequester() }
+    val middlenameFocus = remember { FocusRequester() }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(Color(0xFF111845))
     ) {
 
+        TopMessageBar(
+            message = topMessage,
+            isError = isError,
+            onDismiss = {
+                topMessage = ""
+            }
+        )
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -149,51 +170,66 @@ fun AuthScreen() {
                                     label = "Логин",
                                     value = login,
                                     onValueChange = { login = it },
-                                    required = true
+                                    required = true,
+                                    focusRequester = loginFocus,
+                                    nextFocusRequester = passwordFocus
                                 )
 
                                 AuthField(
                                     label = "Пароль",
                                     value = password,
                                     onValueChange = { password = it },
-                                    required = true
+                                    required = true,
+                                    focusRequester = passwordFocus,
+                                    isLast = true
                                 )
 
                             } else {
 
                                 AuthField(
-                                    label = "Имя",
-                                    value = firstName,
-                                    onValueChange = { firstName = it },
-                                    required = true
-                                )
-
-                                AuthField(
                                     label = "Фамилия",
                                     value = lastName,
                                     onValueChange = { lastName = it },
-                                    required = true
+                                    required = true,
+                                    focusRequester = lastnameFocus,
+                                    nextFocusRequester = firstnameFocus
                                 )
+
+                                AuthField(
+                                    label = "Имя",
+                                    value = firstName,
+                                    onValueChange = { firstName = it },
+                                    required = true,
+                                    focusRequester = firstnameFocus,
+                                    nextFocusRequester = middlenameFocus
+                                )
+
 
                                 AuthField(
                                     label = "Отчество",
                                     value = middleName,
                                     onValueChange = { middleName = it },
-                                    required = false
+                                    required = false,
+                                    focusRequester = middlenameFocus,
+                                    nextFocusRequester = loginFocus
                                 )
 
                                 AuthField(
                                     label = "Логин",
                                     value = login,
                                     onValueChange = { login = it },
-                                    required = true
+                                    required = true,
+                                    focusRequester = loginFocus,
+                                    nextFocusRequester = passwordFocus
                                 )
 
                                 AuthField(
                                     label = "Пароль",
                                     value = password,
                                     onValueChange = { password = it },
-                                    required = true
+                                    required = true,
+                                    focusRequester = passwordFocus,
+                                    isLast = true
                                 )
 
                                 Spacer(Modifier.height(8.dp))
@@ -243,14 +279,16 @@ fun AuthScreen() {
             // 3. **ОБРАБОТКА СОСТОЯНИЯ UI (ОШИБКИ/УСПЕХ)**
             when (val state = authState) {
                 is AuthUiState.Error -> {
-                    Text("Ошибка: ${state.message}", color = Color.Red, modifier = Modifier.padding(top = 8.dp))
+                    topMessage = "Произошла ошибка"
+                    isError = true
                 }
                 is AuthUiState.LoginSuccess -> {
-                    Text("Успешный вход! Роль: ${state.userRole}", color = Color.Green, modifier = Modifier.padding(top = 8.dp))
-                    // TODO: Здесь должна быть навигация на главный экран
+                    topMessage = "С возвращением!"
+                    isError = false
                 }
                 is AuthUiState.RegistrationSuccess -> {
-                    Text("Регистрация успешна! Теперь войдите.", color = Color.Green, modifier = Modifier.padding(top = 8.dp))
+                    topMessage = "Регистрация прошла успешно"
+                    isError = false
                     // TODO: Возможно, переключить isLogin = true
                 }
                 else -> Unit // AuthUiState.Idle или AuthUiState.Loading (уже показано в кнопке)
