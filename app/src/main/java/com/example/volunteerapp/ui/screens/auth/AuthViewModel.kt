@@ -3,6 +3,7 @@ package com.example.volunteerapp.ui.screens.auth
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.volunteerapp.data.remote.AuthRepository
+import com.example.volunteerapp.data.remote.SessionManager
 import com.example.volunteerapp.domain.model.LoginRequest
 import com.example.volunteerapp.domain.model.RegisterRequest
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -48,7 +49,10 @@ class AuthViewModel(
             // Вызов через Репозиторий
             authRepository.login(LoginRequest(userLogin, password))
                 .onSuccess { loginResponse ->
-                    // Получаем роль, которую мы извлекли из поля "message" в LoginResponse
+                    loginResponse.token?.let {
+                        SessionManager.saveToken(it)
+                    }
+
                     val role = loginResponse.message ?: "volunteer"
                     _uiState.value = AuthUiState.LoginSuccess(role)
                 }

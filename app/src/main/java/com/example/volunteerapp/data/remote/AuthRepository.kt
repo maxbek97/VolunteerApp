@@ -39,4 +39,13 @@ class AuthRepository(
             // Ошибка сети
             Result.failure(e)
         }
+
+    suspend fun getVolunteerInfo(): Result<UserDto> {
+        val token = SessionManager.getToken()
+            ?: return Result.failure(Exception("No token"))
+
+        return runCatching {
+            api.getVolunteerInfo("Bearer $token")
+        }
+    }
 }

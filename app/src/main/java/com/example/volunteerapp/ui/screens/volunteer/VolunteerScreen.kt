@@ -1,20 +1,28 @@
 package com.example.volunteerapp.ui.screens.volunteer
-
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.navigation.NavHostController
 import com.example.volunteerapp.ui.components.*
 import com.example.volunteerapp.R
 
 @Composable
-fun VolunteerHomeScreen() {
+private fun VolunteerContent(route: String, navController: NavHostController) {
+    when (route) {
+        "profile" -> VolunteerProfileScreen(navController)
+        "upcoming" -> VolunteerUpcomingScreen()
+        "my" -> VolunteerMyEventsScreen()
+        "done" -> VolunteerDoneScreen()
+    }
+}
 
-    // Какая вкладка выбрана
+@Composable
+fun VolunteerHomeScreen(navController: NavHostController) {
+
     var selectedRoute by remember { mutableStateOf("profile") }
 
-    // Пункты панели
     val navItems = listOf(
         BottomButton("Профиль", painterResource(R.drawable.profile_circle), "profile"),
         BottomButton("Будущие события", painterResource(R.drawable.calendar), "upcoming"),
@@ -27,9 +35,7 @@ fun VolunteerHomeScreen() {
             VolunteerBottomNavigation(
                 items = navItems,
                 selectedRoute = selectedRoute,
-                onItemClick = { item ->
-                    selectedRoute = item.route
-                }
+                onItemClick = { selectedRoute = it.route }
             )
         }
     ) { padding ->
@@ -39,12 +45,7 @@ fun VolunteerHomeScreen() {
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            when (selectedRoute) {
-                "profile" -> Text("Экран профиля")
-                "upcoming" -> Text("Будущие события")
-                "my" -> Text("Мои события")
-                "done" -> Text("Завершённые события")
-            }
+            VolunteerContent(selectedRoute, navController = navController)
         }
     }
 }

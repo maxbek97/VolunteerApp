@@ -3,6 +3,8 @@ import com.example.volunteerapp.domain.model.*
 
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface ApiService {
@@ -18,4 +20,9 @@ interface ApiService {
     suspend fun login(
         @Body body: LoginRequest
     ): Response<LoginResponse>
+
+    @GET("auth/user-info")
+    suspend fun getVolunteerInfo(
+        @Header("Authorization") token: String
+    ): UserDto
 }

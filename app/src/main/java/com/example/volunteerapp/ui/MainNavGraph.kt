@@ -19,7 +19,7 @@ fun MainNavGraph(navController: NavHostController) {
         }
 
         composable("volunteer_home") {
-            VolunteerHomeScreen()
+            VolunteerHomeScreen(navController)
         }
 
         // добавим позже

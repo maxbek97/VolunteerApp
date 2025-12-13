@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
                     }
 
                     composable("volunteer_home") {
-                        VolunteerHomeScreen()
+                        VolunteerHomeScreen(navController)
                     }
 
                     composable("organizer_home") {
