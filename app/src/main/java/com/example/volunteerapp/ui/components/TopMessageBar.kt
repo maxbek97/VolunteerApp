@@ -19,19 +19,22 @@ import kotlinx.coroutines.delay
 fun TopMessageBar(
     message: String,
     isError: Boolean,
-    onDismiss: () -> Unit
+    visible: Boolean,
+    onAutoHide: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
-    LaunchedEffect(message) {
-        if (message.isNotEmpty()) {
+    LaunchedEffect(visible) {
+        if (visible) {
             delay(1500)
-            onDismiss()
+            onAutoHide()
         }
     }
 
     AnimatedVisibility(
-        visible = message.isNotEmpty(),
+        visible = visible,
         enter = slideInVertically(initialOffsetY = { -100 }) + fadeIn(),
-        exit = slideOutVertically(targetOffsetY = { -100 }) + fadeOut()
+        exit = slideOutVertically(targetOffsetY = { -100 }) + fadeOut(),
+        modifier = modifier
     ) {
         Box(
             modifier = Modifier
@@ -42,12 +45,11 @@ fun TopMessageBar(
             Surface(
                 shape = RoundedCornerShape(12.dp),
                 color = Color.White,
-                tonalElevation = 4.dp,   // лёгкая тень
+                tonalElevation = 4.dp,
                 shadowElevation = 4.dp
             ) {
                 Box(
-                    modifier = Modifier
-                        .padding(horizontal = 20.dp, vertical = 14.dp),
+                    modifier = Modifier.padding(horizontal = 20.dp, vertical = 14.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -60,3 +62,4 @@ fun TopMessageBar(
         }
     }
 }
+

@@ -26,6 +26,7 @@ import com.example.volunteerapp.data.remote.RetrofitClient
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavOptionsBuilder
@@ -56,6 +57,7 @@ fun AuthScreen(navController: NavHostController) {
 
     var topMessage by remember { mutableStateOf("") }
     var isError by remember { mutableStateOf(false) }
+    var isTopMessageVisible by remember { mutableStateOf(false) }
 
     // **Собираем состояние из ViewModel (AuthState)**
     val authState by viewModel.uiState.collectAsState()
@@ -83,18 +85,22 @@ fun AuthScreen(navController: NavHostController) {
             .background(Color(0xFF111845))
     ) {
 
+
         TopMessageBar(
             message = topMessage,
             isError = isError,
-            onDismiss = {
-                topMessage = ""
-            }
+            visible = isTopMessageVisible,
+            onAutoHide = { isTopMessageVisible = false },
+            modifier = Modifier
+                .align(Alignment.TopCenter)
+                .zIndex(2f)
         )
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 40.dp, start = 16.dp, end = 16.dp),
+                .padding(top = 40.dp, start = 16.dp, end = 16.dp)
+                .zIndex(1f),
             verticalArrangement = Arrangement.Top
         ) {
 
@@ -280,28 +286,36 @@ fun AuthScreen(navController: NavHostController) {
                 }
             }
             // 3. **ОБРАБОТКА СОСТОЯНИЯ UI (ОШИБКИ/УСПЕХ)**
-            when (val state = authState) {
-                is AuthUiState.Error -> {
-                    topMessage = "Произошла ошибка"
-                    isError = true
-                }
-                is AuthUiState.LoginSuccess -> {
-                    topMessage = "С возвращением!"
-                    isError = false
-
-                    when (state.userRole) {
-                        "volunteer" -> navController.navigate("volunteer_home") {
-                            popUpTo("auth") { inclusive = true }
-                        }
-                        "organizer" -> { /* позже */ }
+            LaunchedEffect(authState) {
+                when (val state = authState) {
+                    is AuthUiState.Error -> {
+                        topMessage = "Ну помоему они не правы"
+                        isError = true
+                        isTopMessageVisible = true
                     }
+
+                    is AuthUiState.LoginSuccess -> {
+                        topMessage = "С возвращением!"
+                        isError = false
+                        isTopMessageVisible = true
+
+                        when (state.userRole) {
+                            "volunteer" -> navController.navigate("volunteer_home") {
+                                popUpTo("auth") { inclusive = true }
+                            }
+                        }
+                    }
+
+                    is AuthUiState.RegistrationSuccess -> {
+                        topMessage = "Регистрация прошла успешно"
+                        isError = false
+                        isTopMessageVisible = true
+                    }
+
+                    else -> Unit
                 }
-                is AuthUiState.RegistrationSuccess -> {
-                    topMessage = "Регистрация прошла успешно"
-                    isError = false
-                }
-                else -> Unit // AuthUiState.Idle или AuthUiState.Loading (уже показано в кнопке)
             }
+
+        }
         }
     }
-}
