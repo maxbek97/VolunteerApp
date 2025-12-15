@@ -1,5 +1,6 @@
 package com.example.volunteerapp.ui.screens.volunteer
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -19,7 +20,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.volunteerapp.data.remote.AuthRepository
 import com.example.volunteerapp.data.remote.RetrofitClient
-import com.example.volunteerapp.ui.components.ProfileRow
+import com.example.volunteerapp.ui.components.*
+
 import androidx.compose.runtime.getValue
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -29,11 +31,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
 
+
 @Composable
 fun VolunteerProfileScreen(
     navController: NavHostController
 ) {
-
     val repository = remember {
         AuthRepository(RetrofitClient.apiService)
     }
@@ -51,9 +53,10 @@ fun VolunteerProfileScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .background(Color.White)
     ) {
         when (val uiState = state) {
+
             ProfileUiState.Loading -> {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             }
@@ -67,9 +70,7 @@ fun VolunteerProfileScreen(
                         text = "Ошибка загрузки профиля",
                         color = MaterialTheme.colorScheme.error
                     )
-
                     Spacer(Modifier.height(8.dp))
-
                     Text(
                         text = uiState.message,
                         color = Color.Gray,
@@ -79,39 +80,46 @@ fun VolunteerProfileScreen(
             }
 
             is ProfileUiState.Success -> {
-                val user = (state as ProfileUiState.Success).user
+                val user = uiState.user
 
-                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.SpaceBetween
+                ) {
 
-                    ProfileRow("Логин", user.userLogin)
-                    ProfileRow("Роль", user.userRole)
-                    ProfileRow("Имя", user.userName)
-                    ProfileRow("Фамилия", user.userSurname)
+                    ProfileHeader()
 
-                    user.userMiddlename?.let {
-                        ProfileRow("Отчество", it)
-                    }
+                    // ====== ВЕРХНИЙ КОНТЕНТ ======
+                    Column(
+                        verticalArrangement = Arrangement.spacedBy(24.dp),
+                        modifier = Modifier.padding(12.dp)
 
-                    user.volunteersHours?.let {
-                        ProfileRow("Часы волонтёрства", it.toString())
-                    }
-
-                    Spacer(Modifier.height(32.dp))
-
-                    Button(
-                        onClick = {
-                            viewModel.logout()
-                            navController.navigate("auth") {
-                                popUpTo(0)
-                            }
-                        },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
                     ) {
-                        Text("Выйти из аккаунта")
+
+
+
+                        ProfileStatsRow(
+                            login = user.userLogin,
+                            role = user.userRole,
+                            hours = user.volunteersHours?.toString() ?: "0"
+                        )
+
+                        ProfileDetails(
+                            name = user.userName,
+                            surname = user.userSurname,
+                            middlename = user.userMiddlename
+                        )
+                    }
+
+                    // ====== КНОПКА ВЫХОДА ======
+                    LogoutButton {
+                        viewModel.logout()
+                        navController.navigate("auth") {
+                            popUpTo(0)
+                        }
                     }
                 }
             }
         }
     }
 }
-
