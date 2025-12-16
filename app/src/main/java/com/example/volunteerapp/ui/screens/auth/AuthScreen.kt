@@ -264,7 +264,7 @@ fun AuthScreen(navController: NavHostController) {
                     if (isLogin) {
                         viewModel.login(login, password)
                     } else {
-                        val role = if (isVolunteer) "volunteer" else "organizer"
+                        val role = if (isVolunteer) "volunteer" else "organiser"
                         viewModel.register(login, password, role, firstName, lastName, middleName)
                     }
                 },
