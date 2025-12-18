@@ -1,4 +1,4 @@
-package com.example.volunteerapp.ui.screens.volunteer
+package com.example.volunteerapp.ui.screens.volunteer.Profile
 
 import com.example.volunteerapp.domain.model.UserDto
 

@@ -1,4 +1,4 @@
-package com.example.volunteerapp.ui.screens.volunteer
+package com.example.volunteerapp.ui.screens.volunteer.Profile
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -25,11 +25,10 @@ import com.example.volunteerapp.ui.components.*
 import androidx.compose.runtime.getValue
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.sp
+import com.example.volunteerapp.ui.screens.volunteer.Profile.ProfileUiState
 
 
 @Composable
@@ -118,6 +117,7 @@ fun VolunteerProfileScreen(
                             popUpTo(0)
                         }
                     }
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
             }
         }

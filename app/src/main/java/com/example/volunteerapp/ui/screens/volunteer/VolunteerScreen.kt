@@ -7,6 +7,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavHostController
 import com.example.volunteerapp.ui.components.*
 import com.example.volunteerapp.R
+import com.example.volunteerapp.ui.screens.volunteer.Profile.VolunteerProfileScreen
+import com.example.volunteerapp.ui.screens.volunteer.closedEvents.VolunteerDoneScreen
+import com.example.volunteerapp.ui.screens.volunteer.futureEvents.VolunteerUpcomingScreen
+import com.example.volunteerapp.ui.screens.volunteer.myEvents.VolunteerMyEventsScreen
 
 @Composable
 private fun VolunteerContent(route: String, navController: NavHostController) {

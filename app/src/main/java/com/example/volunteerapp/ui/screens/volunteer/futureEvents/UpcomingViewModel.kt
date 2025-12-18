@@ -1,4 +1,4 @@
-package com.example.volunteerapp.ui.screens.volunteer
+package com.example.volunteerapp.ui.screens.volunteer.futureEvents
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import com.example.volunteerapp.ui.screens.volunteer.futureEvents.UpcomingUiState
 
 class VolunteerUpcomingViewModel(
     private val repository: VolunteerRepository

@@ -1,10 +1,10 @@
-package com.example.volunteerapp.ui.screens.volunteer
+package com.example.volunteerapp.ui.screens.volunteer.Profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.volunteerapp.data.remote.AuthRepository
 import com.example.volunteerapp.data.remote.SessionManager
-import com.example.volunteerapp.ui.screens.auth.AuthUiState
+import com.example.volunteerapp.ui.screens.volunteer.Profile.ProfileUiState
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow

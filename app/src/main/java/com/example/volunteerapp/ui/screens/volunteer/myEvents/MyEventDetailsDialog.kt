@@ -1,4 +1,4 @@
-package com.example.volunteerapp.ui.screens.volunteer.modal
+package com.example.volunteerapp.ui.screens.volunteer.myEvents
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -15,9 +15,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
@@ -39,10 +37,9 @@ fun formatDate(raw: String): String {
 }
 
 @Composable
-fun EventDetailsDialog(
+fun MyEventDetailsDialog(
     event: EventResponse,
-    onDismiss: () -> Unit,
-    onSubscribe: () -> Unit
+    onDismiss: () -> Unit
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -70,17 +67,6 @@ fun EventDetailsDialog(
 
                 Spacer(Modifier.height(8.dp))
 
-                Button(
-                    onClick = onSubscribe,
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = BlueTextColor,
-                        contentColor = Color.White
-                    )
-                ) {
-                    Text("Подать заявку")
-                }
-
                 OutlinedButton(
                     onClick = onDismiss,
                     modifier = Modifier.fillMaxWidth(),
@@ -92,6 +78,7 @@ fun EventDetailsDialog(
         }
     )
 }
+
 
 
 

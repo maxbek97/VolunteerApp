@@ -1,4 +1,4 @@
-package com.example.volunteerapp.ui.screens.volunteer
+package com.example.volunteerapp.ui.screens.volunteer.futureEvents
 
 import com.example.volunteerapp.domain.model.EventResponse
 

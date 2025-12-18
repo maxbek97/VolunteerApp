@@ -1,4 +1,4 @@
-package com.example.volunteerapp.ui.screens.volunteer
+package com.example.volunteerapp.ui.screens.volunteer.futureEvents
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,10 +27,8 @@ import com.example.volunteerapp.data.remote.VolunteerRepository
 import com.example.volunteerapp.domain.model.EventResponse
 import com.example.volunteerapp.ui.components.EventCard
 import com.example.volunteerapp.ui.components.SearchBar
-import com.example.volunteerapp.ui.screens.volunteer.modal.EventDetailsDialog
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.layout.ModifierLocalBeyondBoundsLayout
 import androidx.compose.ui.zIndex
 import com.example.volunteerapp.ui.components.TopMessageBar
 

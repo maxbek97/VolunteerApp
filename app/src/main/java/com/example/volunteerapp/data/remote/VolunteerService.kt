@@ -20,4 +20,14 @@ interface VolunteerService {
         @Header("Authorization") token: String,
         @Query("eventId") eventId: UInt
     ): Response<Unit>
+
+    @GET("api/VolunteersEvents/closed-events")
+    suspend fun getClosedEvents(
+        @Header("Authorization") token: String
+    ): List<EventResponse>
+
+    @GET("api/VolunteersEvents/my-events")
+    suspend fun getMyEvents(
+        @Header("Authorization") token: String
+    ): List<EventResponse>
 }
