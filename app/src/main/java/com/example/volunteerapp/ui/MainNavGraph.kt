@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.NavHostController
 import com.example.volunteerapp.ui.screens.auth.AuthScreen
+import com.example.volunteerapp.ui.screens.organiser.OrganiserHomeScreen
 import com.example.volunteerapp.ui.screens.volunteer.VolunteerHomeScreen
 
 @Composable
@@ -22,7 +23,8 @@ fun MainNavGraph(navController: NavHostController) {
             VolunteerHomeScreen(navController)
         }
 
-        // добавим позже
-        // composable("organizer_home") { OrganizerHomeScreen() }
+        composable("organiser_home") {
+            OrganiserHomeScreen(navController)
+        }
     }
 }

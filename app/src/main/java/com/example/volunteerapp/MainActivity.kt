@@ -18,6 +18,7 @@ import com.example.volunteerapp.ui.screens.auth.AuthScreen
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.volunteerapp.ui.MainNavGraph
 import com.example.volunteerapp.ui.screens.volunteer.VolunteerHomeScreen
 class MainActivity : ComponentActivity() {
 
@@ -27,25 +28,8 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             MaterialTheme {
-
                 val navController = rememberNavController()
-
-                NavHost(
-                    navController = navController,
-                    startDestination = "auth"
-                ) {
-                    composable("auth") {
-                        AuthScreen(navController)
-                    }
-
-                    composable("volunteer_home") {
-                        VolunteerHomeScreen(navController)
-                    }
-
-                    composable("organizer_home") {
-                        // позже
-                    }
-                }
+                MainNavGraph(navController)
             }
         }
     }

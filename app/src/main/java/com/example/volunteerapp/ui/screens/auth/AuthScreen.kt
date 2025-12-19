@@ -28,7 +28,6 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import androidx.navigation.NavOptionsBuilder
 
 
@@ -301,6 +300,10 @@ fun AuthScreen(navController: NavHostController) {
 
                         when (state.userRole) {
                             "volunteer" -> navController.navigate("volunteer_home") {
+                                popUpTo("auth") { inclusive = true }
+                            }
+
+                            "organiser" -> navController.navigate("organiser_home") {
                                 popUpTo("auth") { inclusive = true }
                             }
                         }
