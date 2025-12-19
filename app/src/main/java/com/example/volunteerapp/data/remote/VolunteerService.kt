@@ -24,7 +24,7 @@ interface VolunteerService {
     @GET("api/VolunteersEvents/closed-events")
     suspend fun getClosedEvents(
         @Header("Authorization") token: String
-    ): List<EventResponse>
+    ): List<VolunteerClosedEventResponse>
 
     @GET("api/VolunteersEvents/my-events")
     suspend fun getMyEvents(

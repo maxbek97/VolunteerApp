@@ -1,6 +1,7 @@
 package com.example.volunteerapp.data.remote
 
 import com.example.volunteerapp.domain.model.EventResponse
+import com.example.volunteerapp.domain.model.VolunteerClosedEventResponse
 
 class VolunteerRepository(
     private val api: VolunteerService
@@ -17,12 +18,12 @@ class VolunteerRepository(
             ?: return Result.failure(Exception("No token"))
         return runCatching { api.getMyEvents("Bearer $token") }
     }
-    suspend fun getClosedEvents(): Result<List<EventResponse>> {
+
+    suspend fun getClosedEvents(): Result<List<VolunteerClosedEventResponse>> {
         val token = SessionManager.getToken()
             ?: return Result.failure(Exception("No token"))
         return runCatching { api.getClosedEvents("Bearer $token") }
     }
-
 
     suspend fun subscribe(eventId: UInt): Result<Unit> {
         val token = SessionManager.getToken()
