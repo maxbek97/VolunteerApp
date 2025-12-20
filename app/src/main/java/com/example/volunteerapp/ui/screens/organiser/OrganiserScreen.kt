@@ -21,12 +21,16 @@ import com.example.volunteerapp.ui.screens.organiser.pastEvents.OrganiserToClose
 import com.example.volunteerapp.ui.screens.organiser.futureEvents.OrganiserUpcomingScreen
 
 @Composable
-private fun OrganiserContent(route: String, navController: NavHostController) {
+private fun OrganiserContent(route: String, navController: NavHostController, onSelectTab: (String) -> Unit) {
     when (route) {
         "profile" -> OrganiserProfileScreen(navController)
         "upcoming" -> OrganiserUpcomingScreen()
         "toclose" -> OrganiserToCloseScreen()
-        "create" -> OrganiserCreateEventScreen()
+        "create" -> OrganiserCreateEventScreen(
+            onFinished = {
+                onSelectTab("upcoming")
+            }
+        )
     }
 }
 
@@ -57,7 +61,7 @@ fun OrganiserHomeScreen(navController: NavHostController) {
                 .fillMaxSize()
                 .padding(padding)
         ) {
-            OrganiserContent(selectedRoute, navController = navController)
+            OrganiserContent(selectedRoute, navController = navController, onSelectTab = {selectedRoute = it})
         }
     }
 }

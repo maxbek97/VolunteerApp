@@ -24,4 +24,8 @@ object RetrofitClient {
     val volunteerApi: VolunteerService by lazy {
         retrofit.create(VolunteerService::class.java)
     }
+
+    val organiserApi: OrganiserService by lazy {
+        retrofit.create(OrganiserService::class.java)
+    }
 }
